@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Views
 {
-    class ConsoleView : IView
+    class ConsoleView : IAdminView
     {
+
         public void ShowCreateUserView()
         {
             throw new NotImplementedException();

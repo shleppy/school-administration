@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Views
 {
-    public interface IView
+    public interface IAdminView
     {
         void ShowCreateUserView();
         void ShowDetailedInfoView(int id);
