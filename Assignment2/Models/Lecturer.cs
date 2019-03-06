@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assignment2.Models
-{
-    class Lecturer : User
+{ 
+    public class Lecturer : User
     {
-        public Lecturer(string firstname, string lastname, string email, Nationality nationality) 
-            : base(firstname, lastname, email, nationality)
-        {
-
-        }
+        [UserAttribute("work_number")]
+        public string PhoneNumber { get; set; }
+        [UserAttribute("abbreviation")]
+        public string LecturerAbbreviation { get; set; }
+        [UserAttribute("starting_date")]
+        public DateTime StartingDate { get; set; }
     }
 }

@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,15 +44,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBAccess\IRepository.cs" />
+    <Compile Include="Commands\AdminCommands.cs" />
+    <Compile Include="Models\UserAttribute.cs" />
+    <Compile Include="Persistence\IAbstractDBFactory.cs" />
+    <Compile Include="Persistence\IPersistableEntity.cs" />
+    <Compile Include="Persistence\IRepository.cs" />
     <Compile Include="Models\Lecturer.cs" />
-    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Persistence\XMLDBFactory.cs" />
+    <Compile Include="Persistence\XMLRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ConsoleView.cs" />
+    <Compile Include="Views\IView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Persistence\XMLPersistence\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
