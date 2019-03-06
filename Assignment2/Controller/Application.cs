@@ -31,14 +31,13 @@ namespace Assignment2.Controller
         public void Run()
         {
             InitUserTypes();
-
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ControlCHandler);
-            Console.WriteLine("Hello welcome");
-            Console.Read();
-            Console.WriteLine("Next Step");
-            Console.Read();
-            Console.WriteLine("Next Step");
-            Console.ReadLine();
+
+            _view.ShowWelcomeScreen();
+            while (true)
+            {
+                _view.ShowMainMenu();
+            }
 
         }
 
@@ -66,7 +65,7 @@ namespace Assignment2.Controller
             return Assembly
                 .GetExecutingAssembly()
                 .GetTypes()
-                .First(x => x.Name == key)
+                .FirstOrDefault(x => x.Name == key)
                 ?.GetConstructor(new Type[] { })
                 ?.Invoke(new object[] { });
         }

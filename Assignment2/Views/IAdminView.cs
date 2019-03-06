@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assignment2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,10 @@ namespace Assignment2.Views
 {
     public interface IAdminView
     {
-        void ShowCreateUserView();
-        void ShowDetailedInfoView(int id);
-        void ShowUserOverview();
+        void ShowWelcomeScreen();
+        void ShowMainMenu();
+        User ShowCreateUserView();
+        void ShowDetailedInfoView(User user);
+        void ShowUserOverview(IEnumerable<User>);
     }
 }
