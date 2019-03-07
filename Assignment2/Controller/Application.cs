@@ -1,5 +1,7 @@
-﻿using Assignment2.Models;
+﻿using Assignment2.Commands;
+using Assignment2.Models;
 using Assignment2.Persistence;
+using Assignment2.Utils;
 using Assignment2.Views;
 using System;
 using System.Collections.Generic;
@@ -34,11 +36,16 @@ namespace Assignment2.Controller
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ControlCHandler);
 
             _view.ShowWelcomeScreen();
+            _view.ShowMainMenu();
+
+            AdminCommand command;
             while (true)
             {
-                _view.ShowMainMenu();
+                _view.ShowPrompt();
+                string input = Console.ReadLine();
+                command = CommandFactory.GetCommand(input);
+                command.Invoke(_repository, _view);
             }
-
         }
 
         private void InitUserTypes()
@@ -51,7 +58,7 @@ namespace Assignment2.Controller
             }
         }
 
-        static void ControlCHandler(object sender, ConsoleCancelEventArgs e)
+        private static void ControlCHandler(object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine(e.SpecialKey);
             if (e.SpecialKey == ConsoleSpecialKey.ControlC)

@@ -11,8 +11,11 @@ namespace Assignment2.Views
     {
         void ShowWelcomeScreen();
         void ShowMainMenu();
+        void ShowPrompt();
+        void UnknownCommand();
+        void QuitView();
         User ShowCreateUserView();
         void ShowDetailedInfoView(User user);
-        void ShowUserOverview(IEnumerable<User>);
+        void ShowUserOverview(IEnumerable<User> users);
     }
 }

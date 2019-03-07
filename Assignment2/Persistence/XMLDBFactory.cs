@@ -22,11 +22,7 @@ namespace Assignment2.Persistence
         }
 
         private IRepository _repoLocation = null;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        
         public IRepository GetRepository()
         {
             if (_repoLocation == null)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    interface IRepository
+    public interface IRepository
     {
         /// <summary>
         /// Add an entity to a database.

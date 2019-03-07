@@ -10,36 +10,51 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Commands
 {
-    public delegate void AdminCommand();
+    public delegate void AdminCommand(IRepository db, IAdminView view);
 
     public static class AdminCommands
     {
         private static IEnumerable<User> users = null;
 
-        private static IEnumerable<User> GetAllUsers(IRepository db)
+        private static IEnumerable<User> InitiliazeUsers(IRepository db, IAdminView view)
         {
             if (users == null) 
                 users = db.All<User>();
             return users;
         }
-
-        private static void CreateUser(IRepository db, IAdminView view)
+        
+        public static void CreateUser(IRepository db, IAdminView view)
         {
             User user = view.ShowCreateUserView();
             db.Add(user);
         }
 
-        private static void GetUsers(IRepository db, IAdminView view)
+        public static void GetUsers(IRepository db, IAdminView view)
         {
-            view.ShowUserOverview(GetAllUsers(db));
+            view.ShowUserOverview(InitiliazeUsers(db, view));
         }
 
-        private static void GetUserById(IRepository db, IAdminView view)
+        public static void GetUserById(IRepository db, IAdminView view)
         {
             Console.WriteLine();
             int id = TextProcessor.GetProperInt("Please enter the user ID: ");
-            User user = GetAllUsers(db).FirstOrDefault(x => x.ID == id);
+            User user = InitiliazeUsers(db, view).FirstOrDefault(x => x.ID == id);
             view.ShowDetailedInfoView(user);
+        }
+
+        public static void Help(IRepository db, IAdminView view)
+        {
+            view.ShowMainMenu();
+        }
+
+        public static void Quit(IRepository db, IAdminView view)
+        {
+            view.QuitView();
+        }
+
+        public static void UnknownCommand(IRepository db, IAdminView view)
+        {
+            view.UnknownCommand();
         }
     }
 }
