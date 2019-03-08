@@ -13,9 +13,9 @@ namespace Assignment2.Models
     {
         string AttributeName { get; } 
 
-        public UserAttribute(string attributeName)
+        public UserAttribute(string description)
         {
-            this.AttributeName = attributeName;
+            this.AttributeName = description;
         }
     }
 }

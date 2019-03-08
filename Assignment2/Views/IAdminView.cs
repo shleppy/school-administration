@@ -14,7 +14,7 @@ namespace Assignment2.Views
         void ShowPrompt();
         void UnknownCommand();
         void QuitView();
-        User ShowCreateUserView();
+        User ShowCreateUserView(IList<Type> userTypes);
         void ShowDetailedInfoView(User user);
         void ShowUserOverview(IEnumerable<User> users);
     }

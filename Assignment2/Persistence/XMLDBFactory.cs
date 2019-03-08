@@ -10,7 +10,6 @@ namespace Assignment2.Persistence
     class XMLDBFactory : AbstractDBFactory
     {
         private static AbstractDBFactory _instance = null;
-        
         public static AbstractDBFactory Instance 
         {
             get
@@ -22,7 +21,6 @@ namespace Assignment2.Persistence
         }
 
         private IRepository _repoLocation = null;
-        
         public IRepository GetRepository()
         {
             if (_repoLocation == null)

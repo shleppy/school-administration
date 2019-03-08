@@ -38,13 +38,13 @@ namespace Assignment2.Utils
             "  [h] Print this help menu\n" +
             "  [q] Exit application";
 
-        public static readonly string UNKNOWN_COMMAND = "Incorrect Command\t\t<< Error";
+        public static readonly string UNKNOWN_COMMAND = "Unknown Command\t\t<< Error";
 
         public static readonly string PROMPT = "\n>>> ";
         
         public static int GetProperInt(string request)
         {
-            Console.Write(request + "\n");
+            Console.Write(request);
             int num;
             while (!int.TryParse(Console.ReadLine(), out num))
                 Console.WriteLine("Incorrect Integer\t\t<< Error");

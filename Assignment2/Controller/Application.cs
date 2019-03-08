@@ -17,7 +17,7 @@ namespace Assignment2.Controller
     {
         private readonly IRepository _repository;
         private readonly IAdminView _view;
-        private IList<Type> _userTypes;
+
         
         public Application()
         {
@@ -26,13 +26,10 @@ namespace Assignment2.Controller
 
             string location = ConfigurationManager.AppSettings["Repository"];
             _repository = (IRepository) GetAssembly(location);
-
-            _userTypes = new List<Type>();
         }
 
         public void Run()
         {
-            InitUserTypes();
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ControlCHandler);
 
             _view.ShowWelcomeScreen();
@@ -48,15 +45,7 @@ namespace Assignment2.Controller
             }
         }
 
-        private void InitUserTypes()
-        {
-            var userTypeAssembly = Assembly.GetAssembly(typeof(User));
-            var userTypes = userTypeAssembly.GetTypes().Where(x => x.IsSubclassOf(typeof(User)));
-            foreach (Type t in userTypes)
-            {
-                _userTypes.Add(t);
-            }
-        }
+
 
         private static void ControlCHandler(object sender, ConsoleCancelEventArgs e)
         {

@@ -5,6 +5,7 @@ using Assignment2.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,11 +23,12 @@ namespace Assignment2.Commands
                 users = db.All<User>();
             return users;
         }
-        
+
         public static void CreateUser(IRepository db, IAdminView view)
         {
-            User user = view.ShowCreateUserView();
-            db.Add(user);
+            User user = view.ShowCreateUserView(GetUserTypes());
+            if (user != null) 
+                db.Add(user);
         }
 
         public static void GetUsers(IRepository db, IAdminView view)
@@ -55,6 +57,18 @@ namespace Assignment2.Commands
         public static void UnknownCommand(IRepository db, IAdminView view)
         {
             view.UnknownCommand();
+        }
+
+        private static IList<Type> GetUserTypes()
+        {
+            IList<Type> _userTypes = new List<Type>();
+            var userTypeAssembly = Assembly.GetAssembly(typeof(User));
+            var userTypes = userTypeAssembly.GetTypes().Where(x => x.IsSubclassOf(typeof(User)));
+
+            foreach (Type t in userTypes)
+                _userTypes.Add(t);
+
+            return _userTypes;
         }
     }
 }
