@@ -26,7 +26,7 @@ namespace Assignment2.Persistence
         /// Update an entity from the database.
         /// </summary>
         /// <param name="entity">The generic entity</param>
-        void Update<T>(T entity) where T : IPersistableEntity;
+        void Update<T>(int id, T entity) where T : IPersistableEntity;
 
         /// <summary>
         /// Retrieve all entities of this type from the database.

@@ -8,11 +8,11 @@ namespace Assignment2.Models
 { 
     public class Student : User
     {
-        [UserAttribute("study_program")]
+        [UserAttribute("Study Program")]
         public string StudyProgram { get; set; }
-        [UserAttribute("cohort")]
+        [UserAttribute("Cohort")]
         public string Cohort { get; set; }
-        [UserAttribute("class")]
+        [UserAttribute("Class")]
         public string Class { get; set; }
     }
 }

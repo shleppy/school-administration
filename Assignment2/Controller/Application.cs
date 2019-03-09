@@ -18,7 +18,6 @@ namespace Assignment2.Controller
         private readonly IRepository _repository;
         private readonly IAdminView _view;
 
-        
         public Application()
         {
             string appType = ConfigurationManager.AppSettings["UI"];
@@ -28,9 +27,15 @@ namespace Assignment2.Controller
             _repository = (IRepository) GetAssembly(location);
         }
 
+        /// <summary>
+        /// The main method for running the application.
+        /// </summary>
         public void Run()
         {
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ControlCHandler);
+
+            if (_repository == null) Console.WriteLine("Repository is null\t\tWARNING!");
+            if (_view == null) Console.WriteLine("View is null\t\tWARNING!");
 
             _view.ShowWelcomeScreen();
             _view.ShowMainMenu();
@@ -45,15 +50,10 @@ namespace Assignment2.Controller
             }
         }
 
-
-
         private static void ControlCHandler(object sender, ConsoleCancelEventArgs e)
         {
-            Console.WriteLine(e.SpecialKey);
             if (e.SpecialKey == ConsoleSpecialKey.ControlC)
-            {
                 e.Cancel = true;
-            }
         }
 
         private object GetAssembly(string key)

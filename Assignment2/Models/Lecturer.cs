@@ -8,11 +8,11 @@ namespace Assignment2.Models
 { 
     public class Lecturer : User
     {
-        [UserAttribute("work_number")]
+        [UserAttribute("Work Number")]
         public string PhoneNumber { get; set; }
-        [UserAttribute("abbreviation")]
+        [UserAttribute("Abbreviaten")]
         public string LecturerAbbreviation { get; set; }
-        [UserAttribute("starting_date")]
+        [UserAttribute("Starting Date")]
         public DateTime StartingDate { get; set; }
     }
 }

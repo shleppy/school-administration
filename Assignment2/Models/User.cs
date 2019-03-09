@@ -25,13 +25,13 @@ namespace Assignment2.Models
 
         [UserAttribute("id")]
         public int ID { get; set; }
-        [UserAttribute("first_name")]
+        [UserAttribute("First Name")]
         public string FirstName { get; set; }
-        [UserAttribute("last_name")]
+        [UserAttribute("Last Name")]
         public string LastName { get; set; }
-        [UserAttribute("nationality")]
+        [UserAttribute("Nationality")]
         public Nationality Nationality { get; set; }
-        [UserAttribute("email")]
+        [UserAttribute("Email Address")]
         public string EmailAddress
         {
             get => this.emailAddress;

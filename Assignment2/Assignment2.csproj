@@ -48,7 +48,9 @@
     <Compile Include="Commands\CommandFactory.cs" />
     <Compile Include="Controller\Application.cs" />
     <Compile Include="Models\UserAttribute.cs" />
-    <Compile Include="Persistence\IAbstractDBFactory.cs" />
+    <Compile Include="Persistence\AbstractDBFactory.cs" />
+    <Compile Include="Persistence\InMemoryDBFactory.cs" />
+    <Compile Include="Persistence\InMemoryRepository.cs" />
     <Compile Include="Persistence\IPersistableEntity.cs" />
     <Compile Include="Persistence\IRepository.cs" />
     <Compile Include="Models\Lecturer.cs" />
@@ -63,7 +65,9 @@
     <Compile Include="Views\IAdminView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Persistence\XMLPersistence\" />
