@@ -36,34 +36,58 @@ namespace Assignment2.Views
             
             var type = userTypes.ElementAt(index);
             var properties = type.GetProperties()
+                .Where(p => p.Name != "ID")
                 .OrderBy(t => t.DeclaringType != null && t.DeclaringType.IsSubclassOf(typeof(User)))
                 .ToArray();
 
-            IList<string> propertyInfo = new List<string>();
+            var propertyInfo = new object[properties.Length];
+            int j = 0;
             foreach (var p in properties)
             {
-                if (p.Name != "ID")
+                if (p.Name == "StartingDate")
+                {
+                    DateTime info = DateTime.Now;
+                    propertyInfo[j++] = info;
+                    Console.WriteLine($"Starting time set to: {info}");
+                    continue;
+                }
+                else
                 {
                     Console.Write($"Please enter {p.Name}: ");
                     string info = Console.ReadLine();
-                    propertyInfo.Add(info);
+                    propertyInfo[j++] = info;
                 }
             }
-            
+
+            User user = (User) Activator.CreateInstance(type, propertyInfo);
+            Console.WriteLine($"created new {user.GetType()}: {user.ToString()} ");
+            return user;
             // TODO create a new user with the information
-            return null;
         }
         
         public void ShowDetailedInfoView(User user)
         {
             // TODO
-
+            if (user == null)
+            {
+                Console.WriteLine("No user found.");
+            }
+            Console.WriteLine(user);
             
         }
 
         public void ShowUserOverview(IEnumerable<User> users)
         {
             // TODO
+            if (users.Count() == 0)
+            {
+                Console.WriteLine("No users in database.");
+                return;
+            }
+            foreach (User user in users)
+            {
+                Console.WriteLine(user);
+            }
         }
     }
 }

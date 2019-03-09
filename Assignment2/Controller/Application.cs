@@ -15,7 +15,7 @@ namespace Assignment2.Controller
 {
     public class Application
     {
-        private readonly IRepository _repository;
+        private readonly IRepository<User> _repository;
         private readonly IAdminView _view;
 
         public Application()
@@ -23,8 +23,7 @@ namespace Assignment2.Controller
             string appType = ConfigurationManager.AppSettings["UI"];
             _view = (IAdminView) GetAssembly(appType);
 
-            string location = ConfigurationManager.AppSettings["Repository"];
-            _repository = (IRepository) GetAssembly(location);
+            _repository = AbstractDBFactory.CreateDBFactory().GetRepository();
         }
 
         /// <summary>
@@ -33,16 +32,23 @@ namespace Assignment2.Controller
         public void Run()
         {
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ControlCHandler);
-
-            if (_repository == null) Console.WriteLine("Repository is null\t\tWARNING!");
-            if (_view == null) Console.WriteLine("View is null\t\tWARNING!");
-
+            
             _view.ShowWelcomeScreen();
             _view.ShowMainMenu();
 
             AdminCommand command;
             while (true)
             {
+                if (_repository == null)
+                {
+                    Console.WriteLine("Repository is null\t\tWARNING!");
+                    break;
+                }
+                if (_view == null)
+                {
+                    Console.WriteLine("View is null\t\tWARNING!");
+                    break;
+                }
                 _view.ShowPrompt();
                 string input = Console.ReadLine();
                 command = CommandFactory.GetCommand(input);

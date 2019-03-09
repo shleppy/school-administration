@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Commands
 {
-    public delegate void AdminCommand(IRepository db, IAdminView view);
+    public delegate void AdminCommand(IRepository<User> db, IAdminView view);
 
     public static class AdminCommands
     {
@@ -22,13 +22,13 @@ namespace Assignment2.Commands
         /// </summary>
         /// <param name="db">The location of the database.</param>
         /// <param name="view">The view which should be shown to the client.</param>
-        public static void CreateUser(IRepository db, IAdminView view)
+        public static void CreateUser(IRepository<User> db, IAdminView view)
         {
             InitiliazeUsers(db);        // init to prevent null reference
             User user = view.ShowCreateUserView(GetUserTypes());
             if (user != null) 
                 db.Add(user);
-            users = db.All<User>();     // force changes
+            users = db.All();    // force changes
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Assignment2.Commands
         /// </summary>
         /// <param name="db">The location of the database containing all the users</param>
         /// <param name="view">The view on which the users should be shown.</param>
-        public static void GetUsers(IRepository db, IAdminView view)
+        public static void GetUsers(IRepository<User> db, IAdminView view)
         {
             view.ShowUserOverview(InitiliazeUsers(db));
         }
@@ -46,7 +46,7 @@ namespace Assignment2.Commands
         /// </summary>
         /// <param name="db">The location of the database containing all the users.</param>
         /// <param name="view">The view on which the detailed user information should be shown.s</param>
-        public static void GetUserById(IRepository db, IAdminView view)
+        public static void GetUserById(IRepository<User> db, IAdminView view)
         {
             Console.WriteLine();
             int id = TextProcessor.GetProperInt("Please enter the user ID: ");
@@ -59,7 +59,7 @@ namespace Assignment2.Commands
         /// </summary>
         /// <param name="db">Optional location of database in case extra information needs to be shown.</param>
         /// <param name="view">The view on which the help information should be shown.</param>
-        public static void Help(IRepository db, IAdminView view)
+        public static void Help(IRepository<User> db, IAdminView view)
         {
             view.ShowMainMenu();
         }
@@ -70,7 +70,7 @@ namespace Assignment2.Commands
         /// <param name="db">Optional location of database in case extra handling is required. 
         /// (e.g. persisting changes before quitting)</param>
         /// <param name="view">The view on which the quit command is called.</param>
-        public static void Quit(IRepository db, IAdminView view)
+        public static void Quit(IRepository<User> db, IAdminView view)
         {
             view.QuitView();
         }
@@ -80,16 +80,16 @@ namespace Assignment2.Commands
         /// </summary>
         /// <param name="db">Location of optional database, probably not necessary in this context, but future proof.</param>
         /// <param name="view">The view on which handles the unknown command.</param>
-        public static void UnknownCommand(IRepository db, IAdminView view)
+        public static void UnknownCommand(IRepository<User> db, IAdminView view)
         {
             view.UnknownCommand();
         }
 
         // Private helper method lazy initialization of user list
-        private static IEnumerable<User> InitiliazeUsers(IRepository db)
+        private static IEnumerable<User> InitiliazeUsers(IRepository<User> db)
         {
             if (users == null)
-                users = db.All<User>();
+                users = db.All();
             return users;
         }
 

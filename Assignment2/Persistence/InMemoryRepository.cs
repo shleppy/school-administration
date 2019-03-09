@@ -8,38 +8,38 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    class InMemoryRepository : IRepository
+    class InMemoryRepository : IRepository<User>
     {
-        IList<IPersistableEntity> users = new List<IPersistableEntity>();
+        List<User> users = new List<User>();
 
-        public void Add<T>(T entity) where T : IPersistableEntity
+        public void Add(User entity)
         {
             users.Add(entity);
         }
 
-        public IEnumerable<T> All<T>() where T : IPersistableEntity
+        public IEnumerable<User> All()
         {
-            return (IEnumerable<T>) users;
+            return users;
         }
 
-        public void Delete<T>(int id) where T : IPersistableEntity
+        public void Delete(int id)
         {
             users.Remove(users.First(x => x.ID == id));
         }
 
-        public IEnumerable<T> Query<T>(Expression<Func<T, bool>> predicate) where T : IPersistableEntity
+        public IEnumerable<User> Query(Expression<Func<User, bool>> predicate)
         {
-            return users.Cast<T>().AsQueryable<T>().Where(predicate);
+            return users.Cast<User>().AsQueryable<User>().Where(predicate);
         }
 
-        public T Single<T>(int id) where T : IPersistableEntity
+        public User Single(int id)
         {
-            return (T) users.FirstOrDefault(x => x.ID == id);
+            return users.FirstOrDefault(x => x.ID == id);
         }
 
-        public void Update<T>(int id, T entity) where T : IPersistableEntity
+        public void Update(int id, User entity)
         {
-            T obj = (T) users.FirstOrDefault(x => x.ID == id);
+            User obj = users.FirstOrDefault(x => x.ID == id);
             obj = entity;
         }
     }

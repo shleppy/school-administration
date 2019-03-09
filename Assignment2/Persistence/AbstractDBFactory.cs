@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assignment2.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    abstract class AbstractDBFactory
+    public abstract class AbstractDBFactory
     {
-        static AbstractDBFactory CreateDBFactory()
+        public static AbstractDBFactory CreateDBFactory()
         {
             string dbFactory = ConfigurationManager.AppSettings["DBFactory"];
             return (AbstractDBFactory) Assembly
@@ -20,5 +21,7 @@ namespace Assignment2.Persistence
                 ?.GetConstructor(new Type[] { })
                 ?.Invoke(new object[] { });
         }
+
+        public abstract IRepository<User> GetRepository();
     }
 }

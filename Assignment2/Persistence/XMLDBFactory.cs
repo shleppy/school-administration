@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assignment2.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    class XMLDBFactory : AbstractDBFactory
+    public class XMLDBFactory : AbstractDBFactory
     {
         private static AbstractDBFactory _instance = null;
         public static AbstractDBFactory Instance 
@@ -20,8 +21,8 @@ namespace Assignment2.Persistence
             }
         }
 
-        private IRepository _repoLocation = null;
-        public IRepository GetRepository()
+        private IRepository<User> _repoLocation = null;
+        public override IRepository<User> GetRepository()
         {
             if (_repoLocation == null)
                 _repoLocation = new XMLRepository(ConfigurationManager.AppSettings["Repository"]);

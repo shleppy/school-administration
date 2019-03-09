@@ -9,7 +9,7 @@ namespace Assignment2.Utils
 {
     public static class TextProcessor
     {
-        private static readonly string LOGO = "   /$$$$$$            /$$                           /$$        /$$$$$$        /$$               /$$\n" +
+        private static readonly string LOGO = "\n   /$$$$$$            /$$                           /$$        /$$$$$$        /$$               /$$\n" +
                                               "  /$$__  $$          | $$                          | $$       /$$__  $$      | $$              |__/\n" +
                                               " | $$  \\__/  /$$$$$$$| $$$$$$$   /$$$$$$   /$$$$$$ | $$      | $$  \\ $$  /$$$$$$$ /$$$$$$/$$$$  /$$ /$$$$$$$\n" +
                                               " |  $$$$$$  /$$_____/| $$__  $$ /$$__  $$ /$$__  $$| $$      | $$$$$$$$ /$$__  $$| $$_  $$_  $$| $$| $$__  $$\n" +
