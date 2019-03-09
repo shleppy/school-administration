@@ -17,7 +17,7 @@ namespace Assignment2.Views
         public void UnknownCommand() { Console.WriteLine(TextProcessor.UNKNOWN_COMMAND); }
         public void QuitView()
         {
-            Console.WriteLine("Are you sure you want to exit? (y/N): ");
+            Console.WriteLine(" Are you sure you want to exit? (y/N): ");
             string input = Console.ReadLine();
             if (input == "y")
             {
@@ -31,8 +31,8 @@ namespace Assignment2.Views
             Console.WriteLine("Available user types:");
             int i = 0;
             foreach (Type t in userTypes)
-                Console.WriteLine($" [{++i}] {t.Name}");
-            int index = TextProcessor.GetProperInt("\nChoose the user type: ") - 1;
+                Console.WriteLine($"  [{++i}] {t.Name}");
+            int index = TextProcessor.GetProperInt("\n Choose the user type: ") - 1;
             
             var type = userTypes.ElementAt(index);
             var properties = type.GetProperties()
@@ -48,21 +48,21 @@ namespace Assignment2.Views
                 {
                     DateTime info = DateTime.Now;
                     propertyInfo[j++] = info;
-                    Console.WriteLine($"Starting time set to: {info}");
+                    Console.WriteLine($" Starting time set to: {info}");
                     continue;
                 }
                 else
                 {
-                    Console.Write($"Please enter {p.Name}: ");
+                    Console.Write($" Please enter {p.Name}: ");
                     string info = Console.ReadLine();
                     propertyInfo[j++] = info;
                 }
             }
 
             User user = (User) Activator.CreateInstance(type, propertyInfo);
-            Console.WriteLine($"created new {user.GetType()}: {user.ToString()} ");
+
+            Console.WriteLine($"\nCreated new {user.GetType().Name}");
             return user;
-            // TODO create a new user with the information
         }
         
         public void ShowDetailedInfoView(User user)
@@ -71,8 +71,15 @@ namespace Assignment2.Views
             if (user == null)
             {
                 Console.WriteLine("No user found.");
+                return;
             }
-            Console.WriteLine(user);
+
+            var properties = user.GetType().GetProperties();
+            Console.WriteLine($"{user.GetType().Name} [{user.ID}]:");
+            foreach (var prop in properties)
+            {
+                Console.WriteLine($"  {prop.Name}: {prop.GetValue(user)}");
+            }
             
         }
 
@@ -86,7 +93,12 @@ namespace Assignment2.Views
             }
             foreach (User user in users)
             {
-                Console.WriteLine(user);
+                var properties = user.GetType().GetProperties();
+                Console.WriteLine($"{user.GetType().Name} [{user.ID}]:");
+                foreach (var prop in properties)
+                {
+                    Console.WriteLine($"  {prop.Name}: {prop.GetValue(user)}");
+                }
             }
         }
     }

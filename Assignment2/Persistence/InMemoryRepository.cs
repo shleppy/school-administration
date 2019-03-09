@@ -12,12 +12,12 @@ namespace Assignment2.Persistence
     {
         List<User> users = new List<User>();
 
-        public void Add(User entity)
+        public void Insert(User entity)
         {
             users.Add(entity);
         }
 
-        public IEnumerable<User> All()
+        public IEnumerable<User> ReadAll()
         {
             return users;
         }
@@ -32,7 +32,7 @@ namespace Assignment2.Persistence
             return users.Cast<User>().AsQueryable<User>().Where(predicate);
         }
 
-        public User Single(int id)
+        public User Read(int id)
         {
             return users.FirstOrDefault(x => x.ID == id);
         }

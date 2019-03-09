@@ -11,16 +11,10 @@ namespace Assignment2.Persistence
     public interface IRepository<T> where T : IPersistableEntity
     {
         /// <summary>
-        /// Add an entity to a database.
+        /// Insert an entity to a database.
         /// </summary>
         /// <param name="entity">The generic entity</param>
-        void Add(T entity);
-
-        /// <summary>
-        /// Delete an entity from the database.
-        /// </summary>
-        /// <param name="entity">The generic entity</param>
-        void Delete(int id);
+        void Insert(T entity);
 
         /// <summary>
         /// Update an entity from the database.
@@ -29,17 +23,23 @@ namespace Assignment2.Persistence
         void Update(int id, T entity);
 
         /// <summary>
-        /// Retrieve all entities of this type from the database.
+        /// Delete an entity from the database.
         /// </summary>
-        /// <returns>Returns an <code>IEnumerable</code> list of entities.</returns>
-        IEnumerable<T> All();
+        /// <param name="entity">The generic entity</param>
+        void Delete(int id);
 
         /// <summary>
         /// Retrieve a single entity from the database.
         /// </summary>
         /// <param name="id">ID of the generic entity.</param>
         /// <returns>The found entity or null</returns>
-        T Single(int id);
+        T Read(int id);
+
+        /// <summary>
+        /// Retrieve all entities of this type from the database.
+        /// </summary>
+        /// <returns>Returns an <code>IEnumerable</code> list of entities.</returns>
+        IEnumerable<T> ReadAll();
 
         /// <summary>
         /// Generic Query to the database. Useful for passing lambda's as an expression.

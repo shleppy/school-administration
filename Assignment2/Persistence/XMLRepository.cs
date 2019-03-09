@@ -1,4 +1,5 @@
 ﻿using Assignment2.Models;
+using Assignment2.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,13 +28,14 @@ namespace Assignment2.Persistence
         public string Dir { get => _directory; private set => _directory = value; }
         public string Path { get; private set; }
 
-        public void Add(User entity)
+        public void Insert(User entity)
         {
-            Console.WriteLine("Adding");
-            throw new NotImplementedException();
+            var root = XMLParser.Read(Path);
+            root.Add(XMLParser.Serialize(entity));
+            root.Save(Path);
         }
 
-        public IEnumerable<User> All()
+        public void Update(int id, User entity)
         {
             throw new NotImplementedException();
         }
@@ -42,18 +44,31 @@ namespace Assignment2.Persistence
         {
             throw new NotImplementedException();
         }
+        
+        public User Read(int id)
+        {
+            var root = XMLParser.Read(Path);
+            foreach (var child in root.Nodes())
+            {
+                User entity = XMLParser.Deserialize(Path);
+                if (entity.ID == id) return entity;
+            }
+            return null;
+        }
+
+        public IEnumerable<User> ReadAll()
+        {
+            var root = XMLParser.Read(Path);
+            List<User> entities = new List<User>();
+            foreach (var child in root.Nodes())
+            {
+                User entity = XMLParser.Deserialize(Path);
+                entities.Add(entity);
+            }
+            return entities;
+        }
 
         public IEnumerable<User> Query(Expression<Func<User, bool>> predicate)
-        { 
-            throw new NotImplementedException();
-        }
-
-        public User Single(int id) 
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(int id, User entity) 
         {
             throw new NotImplementedException();
         }
