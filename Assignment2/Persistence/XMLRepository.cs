@@ -6,69 +6,45 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 using System.Linq;
+using System.Xml.XPath;
 
 namespace Assignment2.Persistence
 {
     public class XMLRepository : IRepository<User>
     {
+        public string Path { get; private set; }
+        public XDocument Document { get; set; }
+
         public XMLRepository(string directory)
         {
-            Path = $"{directory}/{typeof(User).Name}.xml";
             Directory.CreateDirectory(directory);
 
+            Path = $"{directory}/{typeof(User).Name}.xml";
             if (!File.Exists(Path))
-            {
                 Document = new XDocument(
                         new XElement("Users",
                             new XComment("All User types.")));
-            }
             else
-            {
                 Document = XDocument.Load(Path);
-            }
-
             Document.Save(Path);
         }
-
-        public string Path { get; private set; }
-        public XDocument Document { get; set; }
 
         public void Insert(User entity)
         {
             XElement xEle = XElement.Load(Path);
-            string plural = $"{entity.GetType().Name}s";
-            string singular = $"{entity.GetType().Name}";
+            string pluralGroup = $"{entity.GetType().Name}s";
 
+            // Get entity
+            XElement newEntity = XMLUtils.GetEntityAsXElement(entity);
 
-            // check if user type already exists and add to correct position
-            if (UserTypeExists())
-            {
-                xEle.Element(plural).Add(new XElement(singular));
-                List<XAttribute> attributes = xEle.Attributes().ToList();
-            }
+            // Create new parent if necessary
+            if (XMLUtils.UserTypeExists(entity.GetType(), Path))
+                xEle.Element(pluralGroup).Add(newEntity);
             else
-            {
-                xEle.Add(new XElement(plural, new XElement(singular)));
-                List<XAttribute> attributes = xEle.Attributes().ToList();
+                xEle.Add(new XElement(pluralGroup, newEntity));
 
-                int i = 0;
-                foreach (var prop in entity.GetType().GetProperties())
-                {
-                    attributes.Insert(i++, new XAttribute(prop.Name, prop.GetValue(entity)));
-                    //xEle.Element("Users").Add(new XElement($"{entity.GetType().Name}s", 
-                      //  new XElement($"{entity.GetType().Name}",
-                        //            new XAttribute(prop.GetType().Name, prop.GetValue(entity)))));
-                    
-                }
-                xEle.Element(plural).Element(singular).Attributes().Remove();
-                xEle.Element(plural).Element(singular).Add(attributes);
-            }
+            // Write to file
             xEle.Save(Path);
-        }
-
-        private bool UserTypeExists()
-        {
-            return false;
         }
 
         public void Update(int id, User entity)
@@ -89,14 +65,16 @@ namespace Assignment2.Persistence
 
         public IEnumerable<User> ReadAll()
         {
-            var root = XMLParser.Read(Path);
-            List<User> entities = new List<User>();
-            foreach (var child in root.Nodes())
+            XElement xEle = XElement.Load(Path);
+            IEnumerable<XElement> elements = xEle.Elements();
+
+            List<User> users = new List<User>();
+            foreach(XElement element in elements)
             {
-                User entity = null; // XMLParser.Deserialize(Path);
-                entities.Add(entity);
+                users.Add(element.Get)
             }
-            return entities;
+
+            return null;
         }
 
         public IEnumerable<User> Query(Expression<Func<User, bool>> predicate)

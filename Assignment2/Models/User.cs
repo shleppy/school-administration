@@ -12,7 +12,7 @@ namespace Assignment2.Models
     public abstract class User : IPersistableEntity
     {
         private static int _currentUserId;
-        private static readonly Regex _emailRegex = new Regex("[a-zA-Z]*");
+        private static readonly Regex _emailRegex = new Regex("[a-zA-Z]");
 
         private string emailAddress;
 
