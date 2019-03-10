@@ -50,30 +50,47 @@ namespace Assignment2.Views
                 return;
             }
 
-            var properties = user.GetType().GetProperties();
+            var properties = user.GetType().GetProperties()
+                .Where(p => p.Name != "ID")
+                .OrderBy(t => t.DeclaringType != null && t.DeclaringType.IsSubclassOf(typeof(User)))
+                .ToArray();
+
             Console.WriteLine($"{user.GetType().Name} [{user.ID}]:");
             foreach (var prop in properties)
             {
-                Console.WriteLine($"  {prop.Name}: {prop.GetValue(user)}");
+                Console.WriteLine($"  {prop.Name, -22}: {prop.GetValue(user)}");
             }
-            
         }
 
         public void ShowUserOverview(IEnumerable<User> users)
         {
+            //TODO for each user id , first name , last name
             if (users.Count() == 0)
             {
                 Console.WriteLine("No users in database.");
                 return;
             }
+
+            int idPadding = users.Max(x => x.ID.ToString().Length) + 2;
+            int firstPadding = users.Max(x => x.FirstName.ToString().Length) + 5;
+            int lastPadding = users.Max(x => x.FirstName.ToString().Length) + 4;
+
+            if (idPadding < 3) idPadding = 3;
+            if (firstPadding < 10) firstPadding = 10;
+            if (lastPadding < 9) lastPadding = 9;
+
+            Console.WriteLine($"| {"ID".PadRight(idPadding)} | " +
+              $"{"First Name".PadRight(firstPadding)} | " +
+              $"{"Last Name".PadRight(lastPadding)} | ");
+            Console.WriteLine($"|-{"-".PadRight(idPadding, '-')}-" +
+                $"|-{"-".PadRight(firstPadding, '-')}-" +
+                $"|-{"-".PadRight(lastPadding, '-')}-|");
+
             foreach (User user in users)
             {
-                var properties = user.GetType().GetProperties();
-                Console.WriteLine($"{user.GetType().Name} [{user.ID}]:");
-                foreach (var prop in properties)
-                {
-                    Console.WriteLine($"  {prop.Name}: {prop.GetValue(user)}");
-                }
+                Console.WriteLine($"| {user.ID.ToString().PadRight(idPadding)} | " +
+                    $"{user.FirstName.PadRight(firstPadding)} | " +
+                    $"{user.LastName.PadRight(lastPadding)} | ");
             }
         }
 
