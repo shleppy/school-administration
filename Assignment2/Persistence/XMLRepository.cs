@@ -71,7 +71,7 @@ namespace Assignment2.Persistence
             List<User> users = new List<User>();
             foreach(XElement element in elements)
             {
-                users.Add(element.Get)
+
             }
 
             return null;

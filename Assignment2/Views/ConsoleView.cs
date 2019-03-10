@@ -17,48 +17,25 @@ namespace Assignment2.Views
         public void UnknownCommand() { Console.WriteLine(TextProcessor.UNKNOWN_COMMAND); }
         public void QuitView()
         {
-            Console.WriteLine(" Are you sure you want to exit? (y/N): ");
-            string input = Console.ReadLine();
-            if (input == "y")
-            {
-                Console.WriteLine("Exiting...");
+            var isConfirmed = TextProcessor.GetConfirmation(" Are you sure you want to exit? (y/N): ");
+            if (isConfirmed)
                 Environment.Exit(0);
-            }
         }
 
         public User ShowCreateUserView(IList<Type> userTypes)
         {
+            // Get type from user
             Console.WriteLine("Available user types:");
             int i = 0;
             foreach (Type t in userTypes)
                 Console.WriteLine($"  [{++i}] {t.Name}");
             int index = TextProcessor.GetProperInt("\n Choose the user type: ") - 1;
-            
             var type = userTypes.ElementAt(index);
-            var properties = type.GetProperties()
-                .Where(p => p.Name != "ID")
-                .OrderBy(t => t.DeclaringType != null && t.DeclaringType.IsSubclassOf(typeof(User)))
-                .ToArray();
 
-            var propertyInfo = new object[properties.Length];
-            int j = 0;
-            foreach (var p in properties)
-            {
-                if (p.Name == "StartingDate")
-                {
-                    DateTime info = DateTime.Now;
-                    propertyInfo[j++] = info;
-                    Console.WriteLine($" Starting time set to: {info}");
-                    continue;
-                }
-                else
-                {
-                    Console.Write($" Please enter {p.Name}: ");
-                    string info = Console.ReadLine();
-                    propertyInfo[j++] = info;
-                }
-            }
+            // Get property info of that type
+            var propertyInfo = GetRemainingPropInfo(type);
 
+            // Call constructor of the type using reflection
             User user = (User) Activator.CreateInstance(type, propertyInfo);
 
             Console.WriteLine($"\nCreated new {user.GetType().Name}");
@@ -67,7 +44,6 @@ namespace Assignment2.Views
         
         public void ShowDetailedInfoView(User user)
         {
-            // TODO
             if (user == null)
             {
                 Console.WriteLine("No user found.");
@@ -85,7 +61,6 @@ namespace Assignment2.Views
 
         public void ShowUserOverview(IEnumerable<User> users)
         {
-            // TODO
             if (users.Count() == 0)
             {
                 Console.WriteLine("No users in database.");
@@ -100,6 +75,37 @@ namespace Assignment2.Views
                     Console.WriteLine($"  {prop.Name}: {prop.GetValue(user)}");
                 }
             }
+        }
+
+        private object[] GetRemainingPropInfo(Type type)
+        {
+            var properties = type.GetProperties()
+                .Where(p => p.Name != "ID")
+                .OrderBy(t => t.DeclaringType != null && t.DeclaringType.IsSubclassOf(typeof(User)))
+                .ToArray();
+
+            var propertyInfo = new object[properties.Length];
+            int j = 0;
+            foreach (var p in properties)
+            {
+                if (p.Name == "StartingDate")
+                {
+                    DateTime info = TextProcessor.GetProperDateTime($" Please enter {p.Name}: ");
+                    propertyInfo[j++] = info;
+                }
+                else if (p.Name.Contains("EmailAddress"))
+                {
+                    string info = TextProcessor.GetProperEmail($" Please enter {p.Name}: ");
+                    propertyInfo[j++] = info;
+                }
+                else
+                {
+                    Console.Write($" Please enter {p.Name}: ");
+                    string info = Console.ReadLine();
+                    propertyInfo[j++] = info;
+                }
+            }
+            return propertyInfo;
         }
     }
 }

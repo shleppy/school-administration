@@ -12,9 +12,6 @@ namespace Assignment2.Models
     public abstract class User : IPersistableEntity
     {
         private static int _currentUserId;
-        private static readonly Regex _emailRegex = new Regex("[a-zA-Z]");
-
-        private string emailAddress;
 
         public User(string first, string last, string nationality, string email)
         {
@@ -34,16 +31,6 @@ namespace Assignment2.Models
         [UserAttribute("Nationality")]
         public string Nationality { get; set; }
         [UserAttribute("Email Address")]
-        public string EmailAddress
-        {
-            get => this.emailAddress;
-            set
-            {
-                if (!_emailRegex.IsMatch(value))
-                    throw new ArgumentException("Invalid email found.");
-                else
-                    this.emailAddress = value;
-            }
-        }
+        public string EmailAddress { get; set; }
     }
 }

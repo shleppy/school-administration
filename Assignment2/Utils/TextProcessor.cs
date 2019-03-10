@@ -1,8 +1,10 @@
 ﻿using Assignment2.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Assignment2.Utils
@@ -20,7 +22,7 @@ namespace Assignment2.Utils
 
 
 
-        public static readonly string WELCOME_TEXT = LOGO
+        internal static readonly string WELCOME_TEXT = LOGO
             + "\n ===================================================================\n"
             + " ===                         MAIN MENU                           ===\n"
             + " ===================================================================\n"
@@ -31,24 +33,76 @@ namespace Assignment2.Utils
             + "\t #2) Think before you type.\n"
             + "\t #3) With great power comes great responsibility.\n\n";
 
-        public static readonly string MAIN_MENU = "Select one of the following:\n" +
+
+
+        internal static readonly string MAIN_MENU = "Select one of the following:\n" +
             "  [1] Create user\n" +
             "  [2] Show overview users in database\n" +
             "  [3] Show user details\n" +
             "  [h] Print this help menu\n" +
             "  [q] Exit application";
 
-        public static readonly string UNKNOWN_COMMAND = "Unknown Command\t\t<< Error";
+        internal static readonly string UNKNOWN_COMMAND = "Unknown Command\t\t<< Error";
 
-        public static readonly string PROMPT = "\n>>> ";
+        internal static readonly string PROMPT = "\n>>> ";
         
-        public static int GetProperInt(string request)
+        internal static int GetProperInt(string request)
         {
             Console.Write(request);
             int num;
             while (!int.TryParse(Console.ReadLine(), out num))
-                Console.WriteLine("Incorrect Integer\t\t<< Error");
+                Console.WriteLine("Invalid Integer\t\t<< Error");
             return num;
+        }
+
+        internal static bool GetConfirmation(string request)
+        {
+            Console.WriteLine(request);
+            string input = Console.ReadLine();
+            return (input == "y" || input == "yes");
+        }
+
+        internal static DateTime GetProperDateTime(string request)
+        {
+            var dateFormats = new[] { "dd.MM.yyyy", "dd-MM-yyyy", "dd/MM/yyyy", "dd MM yyyy" };
+            DateTime resultDate;
+            bool validDate = false;
+            do
+            {
+                Console.Write(request);
+                string input = Console.ReadLine();
+
+                if (DateTime.TryParseExact(input, dateFormats, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out resultDate))
+                {
+                    validDate = true;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date\t\t<< Error");
+                }
+            } while (!validDate);
+
+            return resultDate;
+        }
+
+        internal static string GetProperEmail(string request)
+        {
+            Regex _emailRegex = new Regex(".+@.+\\..+");
+
+            bool isValidEmail = false;
+            string input = "";
+            while (!isValidEmail)
+            {
+                Console.Write(request);
+
+                input = Console.ReadLine();
+
+                if (_emailRegex.IsMatch(input))
+                    isValidEmail = true;
+                else
+                    Console.WriteLine("Invalid email\t\t<< Error");
+            }
+            return input;
         }
     }
 }
