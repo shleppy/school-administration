@@ -16,10 +16,8 @@ namespace Assignment2.Utils
     {
         public static void Write(User entity, string path)
         {
-            XmlSerializer writer = new XmlSerializer(typeof(User));
-            FileStream file = File.Open(path, FileMode.OpenOrCreate);
-            writer.Serialize(file, entity);
-            file.Close();
+            XDocument xDoc = XDocument.Load(path);
+            xDoc.Add(entity);
         }
 
         public static XElement Read(string path)

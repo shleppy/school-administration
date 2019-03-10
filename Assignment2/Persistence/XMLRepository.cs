@@ -3,11 +3,9 @@ using Assignment2.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace Assignment2.Persistence
 {
@@ -20,24 +18,16 @@ namespace Assignment2.Persistence
 
             if (!File.Exists(Path))
             {
-                using (FileStream fs = File.Create(Path))
-                {
-                    
-                    fs.Close();
-                }
-                File.WriteAllText(Path, "<data></data>");
-                Document = new XDocument(new XElement("administration", new XElement("users")));
-                Document.Save(Path);
+                Document = new XDocument(
+                        new XElement("Users",
+                            new XComment("All User types.")));
             }
             else
             {
                 Document = XDocument.Load(Path);
-                using (FileStream fs = File.Open(Path, FileMode.Open)) 
-                {
-                    Document.Save(Path);
-                    fs.Close();
-                }
             }
+
+            Document.Save(Path);
         }
 
         public string Path { get; private set; }
@@ -45,18 +35,39 @@ namespace Assignment2.Persistence
 
         public void Insert(User entity)
         {
-            XElement root = XElement.Load(Path);
-            
-            foreach (var prop in entity.GetType().GetProperties())
+            XElement xEle = XElement.Load(Path);
+            string plural = $"{entity.GetType().Name}s";
+            string singular = $"{entity.GetType().Name}";
+
+
+            // check if user type already exists and add to correct position
+            if (UserTypeExists())
             {
-                root.Add("users", new XElement($"{entity.GetType().Name}",
-                    new XAttribute(prop.GetType().Name, prop.GetValue(entity))));
+
             }
-            using (FileStream fs = File.Open(Path, FileMode.Open))
+            else
             {
-                Document.Save(Path);
-                fs.Close();
+                xEle.Add(new XElement(plural, new XElement(singular)));
+                List<XAttribute> attributes = xEle.Attributes().ToList();
+
+                int i = 0;
+                foreach (var prop in entity.GetType().GetProperties())
+                {
+                    attributes.Insert(i++, new XAttribute(prop.Name, prop.GetValue(entity)));
+                    //xEle.Element("Users").Add(new XElement($"{entity.GetType().Name}s", 
+                      //  new XElement($"{entity.GetType().Name}",
+                        //            new XAttribute(prop.GetType().Name, prop.GetValue(entity)))));
+                    
+                }
+                xEle.Element(plural).Element(singular).Attributes().Remove();
+                xEle.Element(plural).Element(singular).Add(attributes);
             }
+            xEle.Save(Path);
+        }
+
+        private bool UserTypeExists()
+        {
+            return false;
         }
 
         public void Update(int id, User entity)
@@ -71,12 +82,7 @@ namespace Assignment2.Persistence
         
         public User Read(int id)
         {
-            var root = XMLParser.Read(Path);
-            foreach (var child in root.Nodes())
-            {
-                User entity = null; //XMLParser.Deserialize(Path);
-                if (entity.ID == id) return entity;
-            }
+            
             return null;
         }
 

@@ -24,11 +24,11 @@ namespace Assignment2.Commands
         /// <param name="view">The view which should be shown to the client.</param>
         public static void CreateUser(IRepository<User> db, IAdminView view)
         {
-            InitiliazeUsers(db);        // init to prevent null reference
+            //InitiliazeUsers(db);        // init to prevent null reference
             User user = view.ShowCreateUserView(GetUserTypes());
             if (user != null) 
                 db.Insert(user);
-            users = db.ReadAll();    // force changes
+            //users = db.ReadAll();    // force changes
         }
 
         /// <summary>
