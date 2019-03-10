@@ -48,7 +48,6 @@ namespace Assignment2.Commands
         /// <param name="view">The view on which the detailed user information should be shown.s</param>
         public static void GetUserById(IRepository<User> db, IAdminView view)
         {
-            Console.WriteLine();
             int id = TextProcessor.GetProperInt("Please enter the user ID: ");
             User user = InitiliazeUsers(db).FirstOrDefault(x => x.ID == id);
             view.ShowDetailedInfoView(user);
