@@ -43,7 +43,8 @@ namespace Assignment2.Persistence
             // check if user type already exists and add to correct position
             if (UserTypeExists())
             {
-
+                xEle.Element(plural).Add(new XElement(singular));
+                List<XAttribute> attributes = xEle.Attributes().ToList();
             }
             else
             {
