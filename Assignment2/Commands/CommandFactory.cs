@@ -20,6 +20,7 @@ namespace Assignment2.Commands
                 case "1": return AdminCommands.CreateUser;
                 case "2": return AdminCommands.GetUsers;
                 case "3": return AdminCommands.GetUserById;
+                case "4": return AdminCommands.GenerateHtml;
                 case "h": return AdminCommands.Help;
                 case "q": return AdminCommands.Quit;
                 default: return AdminCommands.UnknownCommand;

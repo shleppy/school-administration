@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Xml.Linq;
 using System.Linq;
 using System.Xml.XPath;
+using System.Reflection;
 
 namespace Assignment2.Persistence
 {
@@ -59,8 +60,7 @@ namespace Assignment2.Persistence
         
         public User Read(int id)
         {
-            
-            return null;
+            return ReadAll().FirstOrDefault(x => x.ID == id);
         }
 
         public IEnumerable<User> ReadAll()
@@ -68,18 +68,43 @@ namespace Assignment2.Persistence
             XElement xEle = XElement.Load(Path);
             IEnumerable<XElement> elements = xEle.Elements();
 
+            var subTypes = Assembly
+                .GetAssembly(typeof(User))
+                .GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(User)))
+                .ToArray();
+
             List<User> users = new List<User>();
+
             foreach(XElement element in elements)
             {
+                var type = subTypes.First(subType => $"{subType.Name}s" == element.Name);
+                var properties = type.GetProperties()
+                    .Where(info => info.GetCustomAttributes(typeof(UserAttribute), true).Length > 0 && info.Name != "ID")
+                    .OrderBy(info => info.DeclaringType != null
+                                     && info.DeclaringType.IsSubclassOf(typeof(User)))
+                    .ToArray();
 
+                var userElements = element.Elements();
+                foreach (var userElement in userElements)
+                {
+                    var propertyValues = userElement
+                        .Elements()
+                        .Where(x => x.Name != "ID")
+                        .Select((t, i) => Convert.ChangeType(t.Value, properties[i].PropertyType))
+                        .ToArray();
+
+                    User user = (User) Activator.CreateInstance(type, propertyValues);
+                    users.Add(user);
+                }
             }
 
-            return null;
+            return users;
         }
 
         public IEnumerable<User> Query(Expression<Func<User, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return ReadAll().AsQueryable().Where(predicate);
         }
     }
 }

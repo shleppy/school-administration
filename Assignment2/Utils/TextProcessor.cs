@@ -31,7 +31,7 @@ namespace Assignment2.Utils
             + " Administrator. It usually boils down to these three things:\n"
             + "\t #1) Respect the privacy of others.\n"
             + "\t #2) Think before you type.\n"
-            + "\t #3) With great power comes great responsibility.\n\n";
+            + "\t #3) With great power comes great responsibility.\n";
 
 
 
@@ -39,6 +39,7 @@ namespace Assignment2.Utils
             "  [1] Create user\n" +
             "  [2] Show overview users in database\n" +
             "  [3] Show user details\n" +
+            "  [4] Generate HTML file\n" +
             "  [h] Print this help menu\n" +
             "  [q] Exit application";
 
@@ -64,7 +65,7 @@ namespace Assignment2.Utils
 
         internal static DateTime GetProperDateTime(string request)
         {
-            var dateFormats = new[] { "dd.MM.yyyy", "dd-MM-yyyy", "dd/MM/yyyy", "dd MM yyyy" };
+            var dateFormats = new[] { "MM.dd.yyyy", "MM-dd-yyyy", "MM/dd/yyyy", "MM dd yyyy" };
             DateTime resultDate;
             bool validDate = false;
             do

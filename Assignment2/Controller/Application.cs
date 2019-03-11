@@ -39,6 +39,7 @@ namespace Assignment2.Controller
             AdminCommand command;
             while (true)
             {
+                // TODO Improve usability by clearng console every loop Console.Clear();
                 if (_repository == null)
                 {
                     Console.WriteLine("Repository is null\t\tWARNING!");
