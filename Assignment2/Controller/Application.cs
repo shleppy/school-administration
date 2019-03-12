@@ -4,12 +4,7 @@ using Assignment2.Persistence;
 using Assignment2.Utils;
 using Assignment2.Views;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment2.Controller
 {
@@ -21,7 +16,7 @@ namespace Assignment2.Controller
         public Application()
         {
             string appType = ConfigurationManager.AppSettings["UI"];
-            _view = (IAdminView) GetAssembly(appType);
+            _view = (IAdminView) AssemblyUtils.GetAssembly(appType);
 
             _repository = AbstractDBFactory.CreateDBFactory().GetRepository();
         }
@@ -31,6 +26,7 @@ namespace Assignment2.Controller
         /// </summary>
         public void Run()
         {
+            //bool isFirstRun = true;
             Console.CancelKeyPress += new ConsoleCancelEventHandler(ControlCHandler);
             
             _view.ShowWelcomeScreen();
@@ -39,17 +35,32 @@ namespace Assignment2.Controller
             AdminCommand command;
             while (true)
             {
+                //Console.Clear();
+                //if (isFirstRun)
+                //{
+                //    _view.ShowWelcomeScreen();
+                //    _view.ShowMainMenu();
+                //    isFirstRun = false;
+                //} else
+                //{
+                //    Console.WriteLine(TextProcessor.LOGO);
+                //}
+
                 // TODO Improve usability by clearng console every loop Console.Clear();
                 if (_repository == null)
                 {
+                    Console.Clear();
                     Console.WriteLine("Repository is null\t\tWARNING!");
                     break;
                 }
                 if (_view == null)
                 {
+                    Console.Clear();
                     Console.WriteLine("View is null\t\tWARNING!");
                     break;
                 }
+
+
                 _view.ShowPrompt();
                 string input = Console.ReadLine();
                 command = CommandFactory.GetCommand(input);
@@ -63,14 +74,5 @@ namespace Assignment2.Controller
                 e.Cancel = true;
         }
 
-        private object GetAssembly(string key)
-        {
-            return Assembly
-                .GetExecutingAssembly()
-                .GetTypes()
-                .FirstOrDefault(x => x.Name == key)
-                ?.GetConstructor(new Type[] { })
-                ?.Invoke(new object[] { });
-        }
     }
 }

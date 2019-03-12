@@ -1,11 +1,5 @@
 ﻿using Assignment2.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Assignment2.Models
 {
@@ -13,9 +7,26 @@ namespace Assignment2.Models
     {
         private static int _currentUserId;
 
-        public User(string first, string last, string nationality, string email)
+        public User()
         {
-            ID = Interlocked.Increment(ref _currentUserId);
+            ID = _currentUserId++;
+        }
+
+        public User(string first, string last, string nationality, string email) : this()
+        {
+            FirstName = first;
+            LastName = last;
+            Nationality = nationality;
+            EmailAddress = email;
+        }
+
+        public User(int id, string first, string last, string nationality, string email)
+        {
+            if (_currentUserId <= id)
+                _currentUserId = id + 1;
+
+            ID = id;
+            // ID = Interlocked.Increment(ref _currentUserId);
             FirstName = first;
             LastName = last;
             Nationality = nationality;

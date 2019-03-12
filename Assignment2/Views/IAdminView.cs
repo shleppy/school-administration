@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Views
 {
-    public interface IAdminView
+    internal interface IAdminView
     {
         /// <summary>
         /// Shows the welcome screen.
@@ -35,7 +35,7 @@ namespace Assignment2.Views
         /// <param name="userTypes">A list of possible user types. 
         /// You will likely want to have this created dynamically.</param>
         /// <returns>A newly created instance of the base type User.</returns>
-        User ShowCreateUserView(IList<Type> userTypes);
+        User ShowAndCreateUserView();
         /// <summary>
         /// Shows the view containing detailed information about a single user
         /// </summary>
@@ -46,5 +46,10 @@ namespace Assignment2.Views
         /// </summary>
         /// <param name="users">The list of users to be shown.</param>
         void ShowUserOverview(IEnumerable<User> users);
+        /// <summary>
+        /// 
+        /// </summary>
+        void ShowGenerateHTMLView();
+
     }
 }

@@ -3,15 +3,14 @@ using Assignment2.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
-using System.Xml.Linq;
 using System.Linq;
-using System.Xml.XPath;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace Assignment2.Persistence
 {
-    public class XMLRepository : IRepository<User>
+    internal class XMLRepository : IRepository<User>
     {
         public string Path { get; private set; }
         public XDocument Document { get; set; }
@@ -19,14 +18,15 @@ namespace Assignment2.Persistence
         public XMLRepository(string directory)
         {
             Directory.CreateDirectory(directory);
-
             Path = $"{directory}/{typeof(User).Name}.xml";
+
             if (!File.Exists(Path))
                 Document = new XDocument(
                         new XElement("Users",
                             new XComment("All User types.")));
             else
                 Document = XDocument.Load(Path);
+
             Document.Save(Path);
         }
 
@@ -42,7 +42,7 @@ namespace Assignment2.Persistence
             if (XMLUtils.UserTypeExists(entity.GetType(), Path))
                 xEle.Element(pluralGroup).Add(newEntity);
             else
-                xEle.Add(new XElement(pluralGroup, newEntity));
+                xEle.Add(new XElement(pluralGroup, new XComment($"All {pluralGroup}"), newEntity));
 
             // Write to file
             xEle.Save(Path);
@@ -65,32 +65,31 @@ namespace Assignment2.Persistence
 
         public IEnumerable<User> ReadAll()
         {
+            // Main Document
             XElement xEle = XElement.Load(Path);
-            IEnumerable<XElement> elements = xEle.Elements();
-
-            var subTypes = Assembly
-                .GetAssembly(typeof(User))
-                .GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(User)))
-                .ToArray();
+            // Children (types) of User
+            IEnumerable<XElement> groupElements = xEle.Elements();
 
             List<User> users = new List<User>();
 
-            foreach(XElement element in elements)
+            var subTypes = AssemblyUtils.GetUserTypes();
+            foreach (XElement group in groupElements)
             {
-                var type = subTypes.First(subType => $"{subType.Name}s" == element.Name);
+                // Find type
+                var type = subTypes.FirstOrDefault(subType => $"{subType.Name}s" == group.Name);
+                // Get all properties of that type
                 var properties = type.GetProperties()
-                    .Where(info => info.GetCustomAttributes(typeof(UserAttribute), true).Length > 0 && info.Name != "ID")
+                    .Where(info => info.GetCustomAttributes(typeof(UserAttribute), true).Length > 0)
                     .OrderBy(info => info.DeclaringType != null
                                      && info.DeclaringType.IsSubclassOf(typeof(User)))
                     .ToArray();
-
-                var userElements = element.Elements();
+                
+                var userElements = group.Elements();
                 foreach (var userElement in userElements)
                 {
+                    // Get all values of the properties of the user
                     var propertyValues = userElement
                         .Elements()
-                        .Where(x => x.Name != "ID")
                         .Select((t, i) => Convert.ChangeType(t.Value, properties[i].PropertyType))
                         .ToArray();
 

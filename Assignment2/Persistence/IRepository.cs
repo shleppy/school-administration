@@ -1,14 +1,10 @@
-﻿using Assignment2.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    public interface IRepository<T> where T : IPersistableEntity
+    internal interface IRepository<T> where T : IPersistableEntity
     {
         /// <summary>
         /// Insert an entity to a database.

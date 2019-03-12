@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
     class InMemoryRepository : IRepository<User>
     {
+        // In Memory db
         List<User> users = new List<User>();
 
         public void Insert(User entity)

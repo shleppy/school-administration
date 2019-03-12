@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment2.Commands
+﻿namespace Assignment2.Commands
 {
-    public static class CommandFactory
+    internal static class CommandFactory
     {
         /// <summary>
         /// Factory for admin menu commands.
         /// </summary>
         /// <param name="input">The bounded string, usually user input.</param>
         /// <returns>The corresponding command</returns>
-        public static AdminCommand GetCommand(string input)
+        internal static AdminCommand GetCommand(string input)
         {
             switch(input)
             {

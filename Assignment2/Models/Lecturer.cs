@@ -1,15 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment2.Models
-{ 
+{
     public class Lecturer : User
     {
         public Lecturer(string first, string last,  string nationality, string email, string phone, string abbr, DateTime startDate)
             : base(first, last, nationality, email)
+        {
+            PhoneNumber = phone;
+            LecturerAbbreviation = abbr;
+            StartingDate = startDate;
+        }
+
+        public Lecturer(int id, string first, string last,  string nationality, string email, string phone, string abbr, DateTime startDate)
+            : base(id, first, last, nationality, email)
         {
             PhoneNumber = phone;
             LecturerAbbreviation = abbr;

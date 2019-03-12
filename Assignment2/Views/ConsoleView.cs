@@ -2,10 +2,13 @@
 using Assignment2.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Xsl;
 
 namespace Assignment2.Views
 {
@@ -15,33 +18,8 @@ namespace Assignment2.Views
         public void ShowMainMenu() { Console.WriteLine(TextProcessor.MAIN_MENU); }
         public void ShowPrompt() { Console.Write(TextProcessor.PROMPT); }
         public void UnknownCommand() { Console.WriteLine(TextProcessor.UNKNOWN_COMMAND); }
-        public void QuitView()
-        {
-            var isConfirmed = TextProcessor.GetConfirmation(" Are you sure you want to exit? (y/N): ");
-            if (isConfirmed)
-                Environment.Exit(0);
-        }
+        public void ShowGenerateHTMLView() { Console.WriteLine("Still being implemented."); }
 
-        public User ShowCreateUserView(IList<Type> userTypes)
-        {
-            // Get type from user
-            Console.WriteLine("Available user types:");
-            int i = 0;
-            foreach (Type t in userTypes)
-                Console.WriteLine($"  [{++i}] {t.Name}");
-            int index = TextProcessor.GetProperInt("\n Choose the user type: ") - 1;
-            var type = userTypes.ElementAt(index);
-
-            // Get property info of that type
-            var propertyInfo = GetRemainingPropInfo(type);
-
-            // Call constructor of the type using reflection
-            User user = (User) Activator.CreateInstance(type, propertyInfo);
-
-            Console.WriteLine($"\nCreated new {user.GetType().Name}");
-            return user;
-        }
-        
         public void ShowDetailedInfoView(User user)
         {
             if (user == null)
@@ -64,7 +42,6 @@ namespace Assignment2.Views
 
         public void ShowUserOverview(IEnumerable<User> users)
         {
-            //TODO for each user id , first name , last name
             if (users.Count() == 0)
             {
                 Console.WriteLine("No users in database.");
@@ -72,26 +49,67 @@ namespace Assignment2.Views
             }
 
             int idPadding = users.Max(x => x.ID.ToString().Length) + 2;
-            int firstPadding = users.Max(x => x.FirstName.ToString().Length) + 5;
-            int lastPadding = users.Max(x => x.FirstName.ToString().Length) + 4;
+            int firstPadding = users.Max(x => x.FirstName.ToString().Length) + 3;
+            int lastPadding = users.Max(x => x.LastName.ToString().Length) + 1;
+            int typePadding = users.Max(x => x.GetType().Name.ToString().Length) + 1;
 
             if (idPadding < 3) idPadding = 3;
             if (firstPadding < 10) firstPadding = 10;
             if (lastPadding < 9) lastPadding = 9;
+            if (typePadding < 5) typePadding = 5;
 
             Console.WriteLine($"| {"ID".PadRight(idPadding)} | " +
               $"{"First Name".PadRight(firstPadding)} | " +
-              $"{"Last Name".PadRight(lastPadding)} | ");
+              $"{"Last Name".PadRight(lastPadding)} | " +
+              $"{"Type".PadRight(typePadding)} | ");
+
             Console.WriteLine($"|-{"-".PadRight(idPadding, '-')}-" +
                 $"|-{"-".PadRight(firstPadding, '-')}-" +
-                $"|-{"-".PadRight(lastPadding, '-')}-|");
+                $"|-{"-".PadRight(lastPadding, '-')}-" +
+                $"|-{"-".PadRight(typePadding, '-')}-|");
 
             foreach (User user in users)
             {
                 Console.WriteLine($"| {user.ID.ToString().PadRight(idPadding)} | " +
                     $"{user.FirstName.PadRight(firstPadding)} | " +
-                    $"{user.LastName.PadRight(lastPadding)} | ");
+                    $"{user.LastName.PadRight(lastPadding)} | " +
+                    $"{user.GetType().Name.PadRight(typePadding)} |");
             }
+        }
+
+        public void QuitView()
+        {
+            var isConfirmed = TextProcessor.GetConfirmation(" Are you sure you want to exit? (y/N): ");
+            if (isConfirmed)
+                Environment.Exit(0);
+        }
+
+
+        public User ShowAndCreateUserView()
+        {
+            // Get user type from input
+            Console.WriteLine("Available user types:");
+            var type = GetUserType();
+
+            // Get property info of that type
+            var propertyInfo = GetRemainingPropInfo(type);
+
+            // Call constructor of the type using reflection
+            User user = (User)Activator.CreateInstance(type, propertyInfo);
+
+            Console.WriteLine($"\nCreated new {user.GetType().Name}");
+            return user;
+        }
+
+        private Type GetUserType()
+        {
+            var userTypes = AssemblyUtils.GetUserTypes();
+
+            int i = 0;
+            foreach (Type t in userTypes)
+                Console.WriteLine($"  [{++i}] {t.Name}");
+            int index = TextProcessor.GetProperInt("\n Choose the user type: ") - 1;
+            return userTypes.ElementAt(index);
         }
 
         private object[] GetRemainingPropInfo(Type type)

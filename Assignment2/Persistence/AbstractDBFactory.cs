@@ -1,27 +1,17 @@
 ﻿using Assignment2.Models;
-using System;
-using System.Collections.Generic;
+using Assignment2.Utils;
 using System.Configuration;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    public abstract class AbstractDBFactory
+    internal abstract class AbstractDBFactory
     {
-        public static AbstractDBFactory CreateDBFactory()
+        internal static AbstractDBFactory CreateDBFactory()
         {
             string dbFactory = ConfigurationManager.AppSettings["DBFactory"];
-            return (AbstractDBFactory) Assembly
-                .GetExecutingAssembly()
-                .GetTypes()
-                .First(x => x.Name == dbFactory)
-                ?.GetConstructor(new Type[] { })
-                ?.Invoke(new object[] { });
+            return (AbstractDBFactory) AssemblyUtils.GetAssembly(dbFactory);
         }
 
-        public abstract IRepository<User> GetRepository();
+        internal abstract IRepository<User> GetRepository();
     }
 }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Utils
 {
-    public static class TextProcessor
+    internal static class TextProcessor
     {
-        private static readonly string LOGO = "\n   /$$$$$$            /$$                           /$$        /$$$$$$        /$$               /$$\n" +
+        internal static readonly string LOGO = "\n   /$$$$$$            /$$                           /$$        /$$$$$$        /$$               /$$\n" +
                                               "  /$$__  $$          | $$                          | $$       /$$__  $$      | $$              |__/\n" +
                                               " | $$  \\__/  /$$$$$$$| $$$$$$$   /$$$$$$   /$$$$$$ | $$      | $$  \\ $$  /$$$$$$$ /$$$$$$/$$$$  /$$ /$$$$$$$\n" +
                                               " |  $$$$$$  /$$_____/| $$__  $$ /$$__  $$ /$$__  $$| $$      | $$$$$$$$ /$$__  $$| $$_  $$_  $$| $$| $$__  $$\n" +
@@ -58,14 +58,15 @@ namespace Assignment2.Utils
 
         internal static bool GetConfirmation(string request)
         {
-            Console.WriteLine(request);
+            Console.Write(request);
             string input = Console.ReadLine();
             return (input == "y" || input == "yes");
         }
 
         internal static DateTime GetProperDateTime(string request)
         {
-            var dateFormats = new[] { "MM.dd.yyyy", "MM-dd-yyyy", "MM/dd/yyyy", "MM dd yyyy" };
+            var dateFormats = new[] { "MM.dd.yyyy", "MM-dd-yyyy", "MM/dd/yyyy", "MM dd yyyy",
+                                      "dd.MM.yyyy", "dd-MM-yyyy", "dd/MM/yyyy", "dd MM yyyy"};
             DateTime resultDate;
             bool validDate = false;
             do
@@ -74,13 +75,10 @@ namespace Assignment2.Utils
                 string input = Console.ReadLine();
 
                 if (DateTime.TryParseExact(input, dateFormats, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out resultDate))
-                {
                     validDate = true;
-                }
                 else
-                {
                     Console.WriteLine("Invalid date\t\t<< Error");
-                }
+
             } while (!validDate);
 
             return resultDate;
@@ -88,6 +86,7 @@ namespace Assignment2.Utils
 
         internal static string GetProperEmail(string request)
         {
+            // 1 - n characters | @ | 1 - n |. | 1 -n characters | minimal example: a@b.c
             Regex _emailRegex = new Regex(".+@.+\\..+");
 
             bool isValidEmail = false;

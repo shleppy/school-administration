@@ -2,6 +2,7 @@
 using Assignment2.Persistence;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,16 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using System.Xml.Xsl;
 
 namespace Assignment2.Utils
 {
-    public static class XMLUtils
+    internal static class XMLUtils
     {
         /// <summary>
         /// Checks if the type exists in the specified XML file
         /// </summary>
-        public static bool UserTypeExists(Type entity, string pathToXml)
+        internal static bool UserTypeExists(Type entity, string pathToXml)
         {
             var xDoc = XDocument.Load(pathToXml);
             var elem = xDoc.XPathSelectElement($"/Users/{ entity.Name }s");
@@ -30,7 +32,7 @@ namespace Assignment2.Utils
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static XElement GetEntityAsXElement(User entity)
+        internal static XElement GetEntityAsXElement(User entity)
         {
             string plural = $"{entity.GetType().Name}s";
             string singular = $"{entity.GetType().Name}";
@@ -59,5 +61,43 @@ namespace Assignment2.Utils
 
             return newEntity;
         }
+
+        internal static void GenerateHTML(string xmlFile, string xsltFile)
+        {
+            XslCompiledTransform transform = new XslCompiledTransform();
+            using (XmlReader reader = XmlReader.Create(new StringReader(xsltFile)))
+            {
+                transform.Load(reader);
+            }
+            StringWriter results = new StringWriter();
+            using (XmlReader reader = XmlReader.Create(new StringReader(xmlFile)))
+            {
+                transform.Transform(reader, null, results);
+            }
+
+             results.ToString();
+            // todo result to html file
+        }
+
+        internal static int GetMaxId(string path)
+        {
+            int currentMax = -1;
+            XElement users = XElement.Load(path);
+            foreach (var userType in users.Elements())
+            {
+                foreach(var user in userType.Elements())
+                {
+                    int max = userType.Elements(userType.Name).Max(l => int.Parse(l.Element("ID").Value));
+                    if (max > currentMax) currentMax = max;
+                }
+            }
+            return currentMax;
+        }
+        
+        internal static string GetRepoPath()
+        {
+            return $"{ConfigurationManager.AppSettings["Repository"]}/{typeof(User).Name}.xml";
+        }
+
     }
 }

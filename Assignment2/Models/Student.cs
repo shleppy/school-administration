@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment2.Models
-{ 
+﻿namespace Assignment2.Models
+{
     public class Student : User
     {
         public Student(string first, string last, string nationality, string email, string studyProgram, string cohort, string cl)
             : base(first, last, nationality, email)
+        {
+            StudyProgram = studyProgram;
+            Cohort = cohort;
+            Class = cl;
+        }
+
+        public Student(int id, string first, string last, string nationality, string email, string studyProgram, string cohort, string cl)
+            : base(id, first, last, nationality, email)
         {
             StudyProgram = studyProgram;
             Cohort = cohort;

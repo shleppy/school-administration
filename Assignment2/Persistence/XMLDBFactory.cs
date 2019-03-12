@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Persistence
 {
-    public class XMLDBFactory : AbstractDBFactory
+    internal class XMLDBFactory : AbstractDBFactory
     {
         private static AbstractDBFactory _instance = null;
-        public static AbstractDBFactory Instance 
+        internal static AbstractDBFactory Instance 
         {
             get
             {
@@ -22,7 +22,7 @@ namespace Assignment2.Persistence
         }
 
         private IRepository<User> _repoLocation = null;
-        public override IRepository<User> GetRepository()
+        internal override IRepository<User> GetRepository()
         {
             if (_repoLocation == null)
                 _repoLocation = new XMLRepository(ConfigurationManager.AppSettings["Repository"]);
